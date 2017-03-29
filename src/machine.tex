@@ -2395,7 +2395,7 @@ applies only to S and U modes.
 
 The A field in a PMP entry's configuration register encodes the
 address-matching mode of the associated PMP address register.  As
-Figure~\ref{pmpcfg-a} shows, two address-matching modes are supported:
+Table~\ref{pmpcfg-a} shows, two address-matching modes are supported:
 naturally aligned power-of-2 regions (NAPOT), including the special case of
 naturally aligned four-byte regions (NA4); and the top boundary of an
 arbitrary range (TOR).  These modes support four-byte granularity.
@@ -2417,9 +2417,29 @@ A & Name & Description \\
 \label{pmpcfg-a}
 \end{table*}
 
-Figure~\ref{pmpcfg-napot}
-shows how the configuration and address registers encode naturally aligned
-power-of-2 ranges.  
+NAPOT ranges make use of the low-order bits of the associated address register
+to encode the size of the range, as shown in Table~\ref{pmpcfg-napot}:
+
+\begin{table*}[h!]
+\begin{center}
+  \begin{tabular}{|c|c|l|}
+  \hline
+  \tt pmpaddr    & {\tt pmpcfg}.A & Match type and size \\
+  \hline
+  \tt aaaa...aaaa & NA4   & 4-byte NAPOT range \\
+  \tt aaaa...aaa0 & NAPOT & 8-byte NAPOT range \\
+  \tt aaaa...aa01 & NAPOT & 16-byte NAPOT range \\
+  \tt aaaa...a011 & NAPOT & 32-byte NAPOT range \\
+  \multicolumn{1}{|c|}{\ldots} &  \ldots  & \multicolumn{1}{|c|}{\ldots} \\
+  \tt aa01...1111 & NAPOT & $2^{XLEN}$-byte NAPOT range \\
+  \tt a011...1111 & NAPOT & $2^{XLEN+1}$-byte NAPOT range \\
+  \tt 0111...1111 & NAPOT & $2^{XLEN+2}$-byte NAPOT range \\
+  \hline
+  \end{tabular}
+\end{center}
+\caption{NAPOT range encoding in PMP address and configuration registers.}
+\label{pmpcfg-napot}
+\end{table*}
 
 If TOR is selected, the associated address register forms the top
 of the address range, and the next-lowest-numbered PMP address register forms
@@ -2436,6 +2456,118 @@ hold the configuration for the 16 PMP entries, as shown in
 Figure~\ref{pmpcfg-rv32}.  For RV64, {\tt pmpcfg0} and {\tt pmpcfg2} hold
 the configuration settings for the 16 PMP entries, as shown in
 Figure~\ref{pmpcfg-rv64}.
+
+\begin{figure}[h!]
+{\footnotesize
+\begin{center}
+\begin{tabular}{@{}Y@{}Y@{}Y@{}Yl}
+\instbitrange{31}{24} &
+\instbitrange{23}{16} &
+\instbitrange{15}{8} &
+\instbitrange{7}{0} & \\
+\cline{1-4}
+\multicolumn{1}{|c|}{pmp3cfg} &
+\multicolumn{1}{c|}{pmp2cfg} &
+\multicolumn{1}{c|}{pmp1cfg} &
+\multicolumn{1}{c|}{pmp0cfg} &
+\tt pmpcfg0 \\
+\cline{1-4}
+8 & 8 & 8 & 8 & \\
+\instbitrange{31}{24} &
+\instbitrange{23}{16} &
+\instbitrange{15}{8} &
+\instbitrange{7}{0} & \\
+\cline{1-4}
+\multicolumn{1}{|c|}{pmp7cfg} &
+\multicolumn{1}{c|}{pmp6cfg} &
+\multicolumn{1}{c|}{pmp5cfg} &
+\multicolumn{1}{c|}{pmp4cfg} &
+\tt pmpcfg1 \\
+\cline{1-4}
+8 & 8 & 8 & 8 & \\
+\instbitrange{31}{24} &
+\instbitrange{23}{16} &
+\instbitrange{15}{8} &
+\instbitrange{7}{0} & \\
+\cline{1-4}
+\multicolumn{1}{|c|}{pmp11cfg} &
+\multicolumn{1}{c|}{pmp10cfg} &
+\multicolumn{1}{c|}{pmp9cfg} &
+\multicolumn{1}{c|}{pmp8cfg} &
+\tt pmpcfg2 \\
+\cline{1-4}
+8 & 8 & 8 & 8 & \\
+\instbitrange{31}{24} &
+\instbitrange{23}{16} &
+\instbitrange{15}{8} &
+\instbitrange{7}{0} & \\
+\cline{1-4}
+\multicolumn{1}{|c|}{pmp15cfg} &
+\multicolumn{1}{c|}{pmp14cfg} &
+\multicolumn{1}{c|}{pmp13cfg} &
+\multicolumn{1}{c|}{pmp12cfg} &
+\tt pmpcfg3 \\
+\cline{1-4}
+8 & 8 & 8 & 8 & \\
+\end{tabular}
+\end{center}
+}
+\vspace{-0.1in}
+\caption{RV32 PMP configuration CSR layout.}
+\label{pmpcfg-rv32}
+\end{figure}
+
+\begin{figure}[h!]
+{\footnotesize
+\begin{center}
+\begin{tabular}{@{}Y@{}Y@{}Y@{}Y@{}Y@{}Y@{}Y@{}Yl}
+\instbitrange{63}{56} &
+\instbitrange{55}{48} &
+\instbitrange{47}{40} &
+\instbitrange{39}{32} &
+\instbitrange{31}{24} &
+\instbitrange{23}{16} &
+\instbitrange{15}{8} &
+\instbitrange{7}{0} & \\
+\cline{1-8}
+\multicolumn{1}{|c|}{pmp7cfg} &
+\multicolumn{1}{c|}{pmp6cfg} &
+\multicolumn{1}{c|}{pmp5cfg} &
+\multicolumn{1}{c|}{pmp4cfg} &
+\multicolumn{1}{c|}{pmp3cfg} &
+\multicolumn{1}{c|}{pmp2cfg} &
+\multicolumn{1}{c|}{pmp1cfg} &
+\multicolumn{1}{c|}{pmp0cfg} &
+\tt pmpcfg0 \\
+\cline{1-8}
+8 & 8 & 8 & 8 & 8 & 8 & 8 & 8 & \\
+\instbitrange{63}{56} &
+\instbitrange{55}{48} &
+\instbitrange{47}{40} &
+\instbitrange{39}{32} &
+\instbitrange{31}{24} &
+\instbitrange{23}{16} &
+\instbitrange{15}{8} &
+\instbitrange{7}{0} & \\
+\cline{1-8}
+\multicolumn{1}{|c|}{pmp15cfg} &
+\multicolumn{1}{c|}{pmp14cfg} &
+\multicolumn{1}{c|}{pmp13cfg} &
+\multicolumn{1}{c|}{pmp12cfg} &
+\multicolumn{1}{c|}{pmp11cfg} &
+\multicolumn{1}{c|}{pmp10cfg} &
+\multicolumn{1}{c|}{pmp9cfg} &
+\multicolumn{1}{c|}{pmp8cfg} &
+\tt pmpcfg2 \\
+\cline{1-8}
+8 & 8 & 8 & 8 & 8 & 8 & 8 & 8 & \\
+\end{tabular}
+\end{center}
+}
+\vspace{-0.1in}
+\caption{RV64 PMP configuration CSR layout.}
+\label{pmpcfg-rv64}
+\end{figure}
 
 \subsubsection*{Locking}
 
