@@ -328,13 +328,13 @@ SXLEN-bit read/write register containing interrupt enable bits.
 \instbit{1} &
 \instbit{0} \\
 \hline
-\multicolumn{1}{|c|}{\wiri} &
+\multicolumn{1}{|c|}{\wpri} &
 \multicolumn{1}{c|}{SEIP} &
 \multicolumn{1}{c|}{UEIP} &
-\multicolumn{1}{c|}{\wiri} &
+\multicolumn{1}{c|}{\wpri} &
 \multicolumn{1}{c|}{STIP} &
 \multicolumn{1}{c|}{UTIP} &
-\multicolumn{1}{c|}{\wiri} &
+\multicolumn{1}{c|}{\wpri} &
 \multicolumn{1}{c|}{SSIP} &
 \multicolumn{1}{c|}{USIP} \\
 \hline
@@ -557,10 +557,10 @@ and virtual addresses.  It need not be capable of holding all possible invalid
 addresses.  Implementations may convert some invalid address patterns into
 other invalid addresses prior to writing them to {\tt sepc}.
 
-When a trap is taken into S-mode, {\tt sepc} is written with the virtual
-address of the instruction that encountered the exception.  Otherwise,
-{\tt sepc} is never written by the implementation, though it may be
-explicitly written by software.
+When a trap is taken into S-mode, {\tt sepc} is written with the
+virtual address of the instruction that encountered the exception or
+was interrupted.  Otherwise, {\tt sepc} is never written by the
+implementation, though it may be explicitly written by software.
 
 \begin{figure}[h!]
 {\footnotesize
@@ -637,8 +637,9 @@ so is only guaranteed to hold supported exception codes.
   0         & 5               & Load access fault \\
   0         & 6               & Store/AMO address misaligned \\
   0         & 7               & Store/AMO access fault \\
-  0         & 8               & Environment call \\
-  0         & 9--11           & {\em Reserved} \\
+  0         & 8               & Environment call from U-mode \\
+  0         & 9               & Environment call from S-mode \\
+  0         & 10--11          & {\em Reserved} \\
   0         & 12              & Instruction page fault \\
   0         & 13              & Load page fault \\
   0         & 14              & {\em Reserved} \\

@@ -255,7 +255,7 @@ practice, even with compatible encodings, due to the differences in
 software calling conventions and system-call interfaces.
 
 The RISC-V privileged architecture provides fields in {\tt
-  misa} to control the user ISA at each level to support emulating
+  misa} to control the unprivileged ISA at each level to support emulating
 different base ISAs on the same hardware.  We note that newer SPARC
 and MIPS ISA revisions have deprecated support for running 32-bit code
 unchanged on 64-bit systems.
@@ -459,7 +459,7 @@ word.  As described in Chapter~\ref{extensions}, an implementation
 that does not require support for the standard compressed instruction
 extension can map 3 additional non-conforming 30-bit instruction
 spaces into the 32-bit fixed-width format, while preserving support
-for standard $>=$32-bit instruction-set extensions.  Further, if the
+for standard $\geq$32-bit instruction-set extensions.  Further, if the
 implementation also does not need instructions $>$32-bits in length,
 it can recover a further four major opcodes for non-conforming extensions.
 \end{samepage-commentary}
@@ -613,8 +613,8 @@ The following table shows the characteristics of each kind of trap:
       Handled by environment? & N & Y & Y & Y \\
       \hline
   \end{tabular}
-  \caption{Characteristics of traps. Notes 1), termination may be
-    requested, 2) imprecise fatal traps might be observable by software.}
+  \caption{Characteristics of traps. Notes: 1) termination may be
+    requested; 2) imprecise fatal traps might be observable by software.}
 \end{table}
 
 The EEI defines for each trap whether it is handled precisely, though

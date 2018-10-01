@@ -1,7 +1,7 @@
 \chapter{Preface}
 
 This is {\bf a draft of} the next release of the document describing the RISC-V
-user-level architecture, targeted for release \specrev.  The document contains the following
+unprivileged architecture, targeted for release \specrev.  The document contains the following
 versions of the RISC-V ISA modules:
 \begin{table}[hbt]
   \centering
@@ -19,8 +19,8 @@ versions of the RISC-V ISA modules:
     \hline
     M        & 2.0 & Y \\
     A        & 2.0 & Y \\
-    F        & 2.0 & Y \\
-    D        & 2.0 & Y \\
+    F        & 2.2 & Y \\
+    D        & 2.2 & Y \\
     Q        & 2.0 & Y \\
     L        & 0.0 & N \\
     C        & 2.0 & Y \\
@@ -47,6 +47,10 @@ The major changes in this version of the document include:
 \itemsep 1pt
 \item Changed document version scheme to avoid confusion with versions
   of the ISA modules.
+\item Incremented the version numbers of the F and D extensions to 2.2,
+  reflecting that version 2.1 changed the canonical NaN, and version
+  2.2 defined the NaN-boxing scheme and changed the definition of the
+  FMIN and FMAX instructions.
 \item Changed name of document to refer to ``unprivileged''
   instructions as part of move to separate ISA specifications from
   platform profile mandates.
@@ -56,18 +60,22 @@ The major changes in this version of the document include:
   reserved}, {\em custom}, {\em non-standard}, and {\em
   non-conforming}.
 \item Changed description of misaligned load and store behavior to
-  support change to be an unprivileged ISA manual versus a user ISA
-  manual.  Now allow visible misaligned exceptions in execution
-  environment interfaces rather then just mandating invisible handling
-  of misaligned loads and stores in user mode.  This behavior was
-  already needed for definition of classic privileged architecture.
+  match change that this is now an unprivileged ISA manual not a user
+  ISA manual.  Now allows visible misaligned address traps in
+  execution environment interfaces rather then just mandating
+  invisible handling of misaligned loads and stores in user mode.
+  This behavior was already needed to support definition of the
+  classic privileged architecture.
 \item FENCE.TSO instruction extension added.
 \item Removed prohibitions on using RV32E with other extensions.
 \item Removed platform-specific mandates that certain encodings
   produced illegal instruction exceptions in RV32E and RV64I chapters.
 \item Counter/timer instructions are now not considered part of
   mandatory base ISA, and so CSR instructions were moved into separate
+  chapter, with the unprivileged counters into another separate
   chapter.
+\item Explicitly defined the 16-bit half-precision floating-point
+  format for floating-point instructions in the 2-bit {\em fmt field.}
 \item Defined the signed-zero behavior of FMIN.{\em fmt} and FMAX.{\em fmt},
   and changed their behavior on signaling-NaN inputs to conform to the
   minimumNumber and maximumNumber operations in the proposed IEEE 754-201x

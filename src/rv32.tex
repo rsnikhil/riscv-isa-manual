@@ -127,7 +127,7 @@ In the base RV32I ISA, there are four core instruction formats
 fixed 32 bits in length and must be aligned on a four-byte boundary in
 memory.  An instruction-address-misaligned exception is generated on a
 taken branch or unconditional jump if the target address is not
-four-byte aligned.  This exception is report on the branch or jump
+four-byte aligned.  This exception is reported on the branch or jump
 instruction, not on the target instruction.  No
 instruction-address-misaligned exception is generated for a
 conditional branch that is not taken.
@@ -655,7 +655,7 @@ optimized away in decode).  In particular, the instruction only reads
 one register.  Also, an ADDI functional unit is more likely to be
 available in a superscalar design as adds are the most common
 operation.  In particular, address-generation functional units can
-execute ADDI using same hardware needed for base+offset address
+execute ADDI using the same hardware needed for base+offset address
 calculations, while register-register ADD or logical/shift operations
 require additional hardware.
 \end{commentary}
@@ -1133,7 +1133,7 @@ Chapter~\ref{ch:memorymodel} provides a precise description of the
 RISC-V memory consistency model.
   
 The EEI will define what I/O operations are possible, and in
-particular, which load and store instructions might be treated and
+particular, which memory addresses when accessed by load and store instructions will be treated and
 ordered as device input and device output operations respectively
 rather than memory reads and writes.  For example, memory-mapped I/O
 devices will typically be accessed with uncached loads and stores that
@@ -1163,10 +1163,22 @@ FENCE.
 \label{fm}
 \end{table}
 
-The fence mode field {\em fm} defines the semantics of the FENCE.
-A FENCE with {\em fm}=0000 orders all memory operations in its predecessor set before all memory operations in its successor set.
-A FENCE.TSO instruction orders all load operations in its predecessor set before all memory operations in its successor set, and all store operations in its predecessor set before all store operations in its successor set.
-This leaves non-AMO store operations in the FENCE.TSO's predecessor set unordered with non-AMO loads in its successor set.
+The fence mode field {\em fm} defines the semantics of the FENCE.  A
+FENCE with {\em fm}=0000 orders all memory operations in its
+predecessor set before all memory operations in its successor set.  A
+FENCE.TSO instruction orders all load operations in its predecessor
+set before all memory operations in its successor set, and all store
+operations in its predecessor set before all store operations in its
+successor set.  This leaves non-AMO store operations in the
+FENCE.TSO's predecessor set unordered with non-AMO loads in its
+successor set.
+
+\begin{commentary}
+  The FENCE.TSO encoding was added as an optional extension to the
+  original base FENCE instruction encoding.  The base definition
+  requires that implementations ignore any set bits and treat the
+  FENCE as global, and so this is a backwards-compatible extension.
+\end{commentary}
 
 The unused fields in the FENCE instructions---{\em rs1} and {\em rd}---are
 reserved for finer-grain fences in future extensions.  For forward
@@ -1328,6 +1340,10 @@ supervisor-level operating system or debugger.
     ebreak              # Break to debugger
     srai x0, x0, 7      # NOP encoding the semihosting call number 7
 \end{verbatim}
+   Note that these three instructions must be 32-bit-wide instructions,
+   i.e., they mustn't be among the compressed 16-bit instructions
+   described in Chapter~\ref{compressed}.
+
    The shift NOP instructions are still considered available for use as
    HINTS.
 

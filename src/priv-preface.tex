@@ -6,12 +6,17 @@ architecture proposal.  Changes from version 1.10 include:
 \begin{itemize}
   \parskip 0pt
   \itemsep 1pt
-\item Added a draft proposal for a hypervisor extension.
 \item Improvements to the description and commentary.
+\item Added a draft proposal for a hypervisor extension.
 \item Specified which interrupt sources are reserved for standard use.
+\item Added specification that xRET instructions may, but are not
+  required to, clear LR reservations if A extension present.
 \item The virtual-memory system no longer permits supervisor mode to execute
   instructions from user pages, regardless of the SUM setting.
 \item Made the {\tt mstatus}.MPP field \warl, rather than \wlrl.
+\item Made the unused {\em x}{\tt ip} fields \wpri, rather than \wiri.
+\item Made the unused {\tt misa} fields \wlrl, rather than \wiri.
+\item Made the unused {\tt pmpaddr} and {\tt pmpcfg} fields \warl, rather than \wiri.
 \item Required all harts in a system to employ the same PTE-update scheme as each other.
 \item Rectified an editing error that misdescribed the mechanism by which
   {\tt mstatus}.{\em x}IE is written upon an exception.
